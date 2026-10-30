@@ -1,9 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-build="clients-20261030-1203">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Secure Alert - Team Member</title>
+<script>
+/* Client portal self-update: if the server has a newer build, reload onto it once. Keys clb/clr are this page's own. */
+(function(){ try{
+  var cur = document.documentElement.getAttribute('data-build'); if(!cur) return;
+  function cBuildCheck(){
+    fetch(location.pathname + '?clv=' + Date.now(), {cache:'no-store'}).then(function(r){ return r.text(); }).then(function(t){
+      var m = t.match(/data-build="(clients-[^"]+)"/); if(!m) return;
+      if(m[1] !== cur && sessionStorage.getItem('clb') !== m[1]){
+        var busy=false;
+        try{ var ae=document.activeElement; if(ae && /INPUT|TEXTAREA|SELECT/.test(ae.tagName)) busy=true; }catch(e){}
+        if(busy) return;
+        sessionStorage.setItem('clb', m[1]); sessionStorage.setItem('clr', '1'); location.reload();
+      }
+      else { sessionStorage.setItem('clb', cur); sessionStorage.removeItem('clr'); }
+    }).catch(function(){});
+  }
+  if(!(sessionStorage.getItem('clb') === cur && !sessionStorage.getItem('clr'))) cBuildCheck();
+  setInterval(cBuildCheck, 60000);
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden) cBuildCheck(); });
+}catch(e){} })();
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(160deg,#0d2138 0%,#1a365d 55%,#2d4a7a 100%);color:#1a202c;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 20px 36px;}
